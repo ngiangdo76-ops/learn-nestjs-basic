@@ -1,4 +1,12 @@
-import { Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
 
@@ -11,28 +19,32 @@ export class UserController {
   //LAM S de user tuy cap vao index khi vo duong dan ?
   // can co 1 route
   @Get() // -> /users
-  index(@Query() query: any) {
-    // return [this.userservice.getUsers(), this.authservice.login()];
-    // return 'index';
-    //2 cach thong thuong khoi tao new
-    // const userservice = new UserService();
-    // return userservice.getUsers();
-    return {
-      keyword: query.keyword,
-    };
+  index() {
+    return this.userservice.findAll();
   }
 
   // 1 goi 1 cai decorator
-  @Get('/:id')
+  /*   @Get('/:id')
   find(@Param('id') id: string) {
     return 'User ' + id;
+  } */
+
+  // Tìm kiếm và trả về một người dùng duy nhất dựa vào id.
+  @Get('/:id')
+  find(@Param('id') id: string) {
+    return this.userservice.find(+id);
   }
+
   @Post()
-  create() {
-    return 'create';
+  create(@Body() body: any) {
+    return this.userservice.create(body);
   }
-  @Delete()
-  delete() {
-    return 'delete';
+  @Delete('/:id')
+  delete(@Param('id') id: string) {
+    return this.userservice.delete(+id);
+  }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() body: any) {
+    this.userservice.update(+id, body);
   }
 }

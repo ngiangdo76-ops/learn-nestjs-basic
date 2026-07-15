@@ -13,6 +13,7 @@ getHello() {
   return 'Hello World!';
 }
 ```
+Route se phan hoi khi nguoi dung truy cap Get /hello
 ### 2. Controller trong NestJS là gì?
 
 **Controller** chịu trách nhiệm:
@@ -48,4 +49,126 @@ export class UserController {
   }
 }
 
+```
+Giải thích:
+
+`@Param()` lấy giá trị tham số từ URL.
+### 5. Xử lý Query Parameters
+
+**Query Parameters** được truyền trên URL dạng `?key=value`. Ví dụ: `/user?age=20`.
+
+Ví dụ:
+
+```javascript
+import { Controller, Get, Query } from '@nestjs/common';
+
+@Controller('user')
+export class UserController {
+  @Get()
+  findByAge(@Query('age') age: string) {
+    return `This action returns users with age: ${age}`;
+  }
+}
+
+```
+Giải thích:
+
+`@Query()` lấy giá trị từ query parameters.
+
+### 6. Xử lý Body với @Post()
+
+Đối với HTTP POST, dữ liệu thường được truyền trong **body** của request.
+
+Ví dụ:
+
+```javascript
+import { Controller, Post, Body } from '@nestjs/common';
+
+@Controller('user')
+export class UserController {
+  @Post()
+  createUser(@Body() createUserDto: any) {
+    return `This action adds a new user: ${JSON.stringify(createUserDto)}`;
+  }
+}
+```
+Giải thích:
+
+* `@Body()` lấy dữ liệu từ body của request.
+* Trong thực tế, bạn nên sử dụng **DTO** để định nghĩa và validate dữ liệu truyền vào.
+```
+  create() {
+  /*   1 test thu them
+    return 'create'; */
+    
+  }
+```
+Giải thích:
+
+* `@Body()` lấy dữ liệu từ body của request.
+* Trong thực tế, bạn nên sử dụng **DTO** để định nghĩa và validate dữ liệu truyền vào.
+
+### 7. Tổ chức Routes với Prefix
+
+* `@Controller('user')` định nghĩa một **prefix** chung cho tất cả các route trong controller.
+* Các route bên trong controller sẽ được nối với prefix này.
+
+Ví dụ:
+
+```javascript
+@Controller('user') // Prefix: /user
+export class UserController {
+  @Get()
+  findAll() {
+    return 'GET /user';
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return `GET /user/${id}`;
+  }
+}
+```
+### 8. Kết hợp Service và Controller
+
+Controller gọi **Service** để xử lý logic nghiệp vụ thay vì viết trực tiếp trong Controller.
+
+Ví dụ:
+
+`user.service.ts`:
+
+```javascript
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class UserService {
+  findAll() {
+    return ['User 1', 'User 2', 'User 3'];
+  }
+
+  findOne(id: string) {
+    return { id, name: 'John Doe' };
+  }
+}
+```
+`user.controller.ts`:
+
+```javascript
+import { Controller, Get, Param } from '@nestjs/common';
+import { UserService } from './user.service';
+
+@Controller('user')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+  @Get()
+  findAll() {
+    return this.userService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.userService.findOne(id);
+  }
+}
 ```
