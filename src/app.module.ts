@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm'; // Thêm dòng import này
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { User } from './modules/user/user.entity';
 import { UserModule } from './modules/user/user.module';
+import { ProductModule } from './product/product.module';
 @Module({
   imports: [
     UserModule,
+    ProductModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -15,7 +17,7 @@ import { UserModule } from './modules/user/user.module';
       password: '',
       database: '04-nestjs-type',
       entities: [User],
-      synchronize: true, // Tự động đồng bộ database (Không nên dùng ở Production)
+      synchronize: true,
     }),
   ],
   controllers: [AppController],
