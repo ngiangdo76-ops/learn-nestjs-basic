@@ -1,14 +1,4 @@
-## Bài 5: Làm việc với Database (TypeORM) trong NestJS
 
-### 1. Tổng quan về TypeORM
-
-* **TypeORM** là một **ORM** (Object Relational Mapping) cho phép tương tác với cơ sở dữ liệu thông qua các **class** và **object** thay vì viết trực tiếp câu lệnh SQL.
-* Hỗ trợ nhiều loại cơ sở dữ liệu như **PostgreSQL, MySQL, SQLite, SQL Server, v.v.**
-
-Lợi ích của TypeORM:
-* Tự động ánh xạ bảng (table) vào các entity (class).
-* Dễ dàng thực hiện CRUD mà không cần viết SQL thủ công.
-* Tương thích tốt với NestJS.
 ## Bài 5: Làm việc với Database (TypeORM) trong NestJS
 
 ### 1. Tổng quan về TypeORM
@@ -78,10 +68,11 @@ nest generate controller user
 ```
 #### Bước 2: Định nghĩa Entity User
 user.entity.ts:
+
 ```typescript
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity() // class User ánh xạ với bảng users
 export class User {
   @PrimaryGeneratedColumn()
   id: number;

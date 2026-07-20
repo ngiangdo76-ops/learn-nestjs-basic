@@ -30,4 +30,7 @@ export class ProductService {
   async findOne(id: number) {
     return this.productsrepository.findOneBy({ id });
   }
+  async findAll() {
+    return await this.productsrepository.find();
+  }
 }

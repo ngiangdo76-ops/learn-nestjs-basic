@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
 } from '@nestjs/common';
 import CreateProductDto from 'src/dto/create-product.dto';
 import { ProductService } from './product.service';
@@ -15,8 +16,9 @@ export class ProductController {
   constructor(private readonly productsservice: ProductService) {}
   //   constructor(private productService: ProductService) {}
   @Get()
-  findAll() {
-    return 'a';
+  findAll(@Req() req: Request & { user: string }) {
+    console.log(req.user);
+    return this.productsservice.findAll();
   }
   @Get(':id')
   findOne(@Param('id') id: number) {
