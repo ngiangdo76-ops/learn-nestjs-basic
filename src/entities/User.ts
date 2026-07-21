@@ -11,8 +11,13 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column({
+    nullable: true,
+  })
+  refresh_token?: string;
+
   @Column()
-  password: string; // Mật khẩu đã mã hóa
+  password: string;
 
   @Column()
   create_at: Date;

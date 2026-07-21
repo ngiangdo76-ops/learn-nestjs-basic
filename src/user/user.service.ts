@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/entities/User';
@@ -32,6 +32,27 @@ export class UserService {
       return user;
     }
     return null;
+  }
+  async saveRefreshToken(refreshToken: string, userId: number) {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    console.log(refreshToken);
+    if (!user) {
+      throw new NotFoundException('Refresh Tokenko tim thay user');
+    }
+    user.refresh_token = hashedRefreshToken;
+    return this.userRepository.save(user);
+  }
+
+  async verifyRefreshToken(refreshToken: string, userId: number) {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    if (user) {
+      const status = await bcrypt.compare(refreshToken, user.refresh_token);
+      if (status) {
+        return user;
+      }
+    }
+    return false;
   }
 
   findAll() {

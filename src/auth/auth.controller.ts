@@ -1,6 +1,15 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 
 import { LocalAuthGuard } from 'src/guards/local-auth.guard';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 
@@ -27,6 +36,24 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  @Post('refresh-token')
+  async refreshToken(@Body() { refreshToken }: { refreshToken: string }) {
+    //ko ton tai
+    if (!refreshToken) {
+      throw new BadRequestException('Refresh token is required.');
+    }
+    const user = await this.authService.verfiyRefreshToken(refreshToken);
+    if (!user) {
+      throw new BadRequestException('Invalid refresh token.');
+    }
+    return this.authService.login(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
+  }
   // @Get()
   // findAll() {
   //   return this.authService.findAll();
