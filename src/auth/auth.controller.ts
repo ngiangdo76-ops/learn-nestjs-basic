@@ -8,8 +8,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { LocalAuthGuard } from 'src/guards/local-auth.guard';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 
@@ -22,7 +22,7 @@ export class AuthController {
 
   @Post('/register')
   register(@Body() userData: any) {
-    return this.userservice.createUser(userData);
+    return this.userservice.createnewUser(userData);
   }
   // @Post('/login')
   // login(@Body() dataLogin: any) {

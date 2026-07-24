@@ -1,3 +1,4 @@
+import { BullModule } from '@nestjs/bullmq';
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,8 +8,9 @@ import { AuthModule } from './auth/auth.module';
 import Product from './entities/Product';
 import { User } from './entities/User';
 import { LoggingMiddleware } from './middleware/logging/logging.middleware';
-import { UserModule } from './modules/user/user.module';
+
 import { ProductModule } from './product/product.module';
+import { UserModule } from './user/user.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -28,6 +30,12 @@ import { ProductModule } from './product/product.module';
       synchronize: true,
     }),
     AuthModule,
+    BullModule.forRoot({
+      connection: {
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT as any),
+      },
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -36,6 +44,6 @@ export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggingMiddleware)
-      .forRoutes({ path: 'product', method: RequestMethod.GET }); // Middleware cho /products
+      .forRoutes({ path: 'product', method: RequestMethod.GET });
   }
 }

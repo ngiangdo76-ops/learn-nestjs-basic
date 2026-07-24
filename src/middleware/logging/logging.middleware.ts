@@ -4,7 +4,7 @@ import { HttpStatus, Injectable, NestMiddleware } from '@nestjs/common';
 export class LoggingMiddleware implements NestMiddleware {
   use(req: any, res: any, next: () => void) {
     // muon co them trang thai
-    let isAuth = false;
+    let isAuth = true;
     if (!isAuth) {
       return res.status(HttpStatus.UNAUTHORIZED).json({
         message: 'Unauthorized',

@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -17,12 +19,15 @@ export class ProductController {
   //   constructor(private productService: ProductService) {}
   @Get()
   findAll(@Req() req: Request & { user: string }) {
-    console.log(req.user);
     return this.productsservice.findAll();
   }
   @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.productsservice.findOne(id);
+  async findOne(@Param('id') id: number) {
+    const product = await this.productsservice.findOne(id);
+    if (!product) {
+      throw new HttpException('san pham ko tim that', HttpStatus.NOT_FOUND);
+    }
+    return product;
   }
 
   @Post()
